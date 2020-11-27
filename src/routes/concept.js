@@ -27,11 +27,11 @@ router.delete('/:id', async(req,res) => {
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_concepto, descripción} = req.body;
+    const { usuario, nombre_concepto, descripcion} = req.body;
     const newConcept = {
         usuario,
         nombre_concepto,
-        descripción
+        descripcion
     };
     await pool.query('UPDATE concepto set ? WHERE id_concepto = ?', [newConcept, req.params.id]);
     res.json(`Concepto with id ${req.params.id} was updated with data ${newCategory}`);

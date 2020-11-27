@@ -22,17 +22,17 @@ router.post('/', async (req, res) => {
 })
 
 router.delete('/:id', async(req,res) => {
-    await pool.query('DELETE FROM punto_adquisicion WHERE id_unto = ?', [req.params.id]);
+    await pool.query('DELETE FROM punto_adquisicion WHERE id_punto = ?', [req.params.id]);
     res.json(`acquisition_point with id ${req.params.id} was deleted`);
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_punto, dirección, descripción} = req.body;
+    const { usuario, nombre_punto, direccion, descripcion} = req.body;
     const newPoint = {
         usuario,
         nombre_punto,
-        dirección,
-        descripción
+        direccion,
+        descripcion
     };
     await pool.query('UPDATE punto_adquisicion set ? WHERE id_punto = ?', [newPoint, req.params.id]);
     res.json(`acquisition_point with id ${req.params.id} was updated`);

@@ -10,7 +10,7 @@ router.get('/', async (req,res)=>{
 
 // Una categoría
 router.get('/:nombre', async (req, res) => {
-    const categoria = await pool.query('SELECT * FROM categoria WHERE nombre_categoría = ?', [req.params.nombre]
+    const categoria = await pool.query('SELECT * FROM categoria WHERE nombre_categoria = ?', [req.params.nombre]
     );
     res.json(categoria);
 });
@@ -21,18 +21,18 @@ router.post('/', async (req, res) => {
 });
 
 router.delete('/:id', async(req,res) => {
-    await pool.query('DELETE FROM categoria WHERE id_categoría = ?', [req.params.id]);
+    await pool.query('DELETE FROM categoria WHERE id_categoria = ?', [req.params.id]);
     res.json(`Category with id ${req.params.id} was deleted`);
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_categoría, descripción} = req.body;
+    const { usuario, nombre_categoria, descripcion} = req.body;
     const newCategory = {
         usuario,
-        nombre_categoría,
-        descripción
+        nombre_categoria,
+        descripcion
     };
-    await pool.query('UPDATE categoria set ? WHERE id_categoría = ?', [newCategory, req.params.id]);
+    await pool.query('UPDATE categoria set ? WHERE id_categoria = ?', [newCategory, req.params.id]);
     res.json(`Category with id ${req.params.id} was updated with data ${newCategory}`);
 });
 

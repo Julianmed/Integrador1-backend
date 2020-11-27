@@ -25,21 +25,4 @@ router.delete('/:id', async(req,res) => {
     await pool.query('DELETE FROM movimiento WHERE consecutivo = ?', [req.params.id]);
     res.json(`movement with consecutive ${req.params.id} was deleted`);
 });
-
-router.put('/:id', async (req,res) => {
-    const { usuario, id_punto, id_categoría, id_concepto, id_producto_servicio, fecha, cantidad, valor_unitario, tipo_movimiento} = req.body;
-    const newMovement = {
-        usuario,
-        id_punto,
-        id_categoría,
-        id_concepto,
-        id_producto_servicio,
-        fecha,
-        cantidad,
-        valor_unitario,
-        tipo_movimiento
-    };
-    await pool.query('UPDATE concepto set ? WHERE consecutivo = ?', [newMovement, req.params.id]);
-    res.json(`Movement with consecutive ${req.params.id} was updated with data ${newCategory}`);
-});
 module.exports = router;

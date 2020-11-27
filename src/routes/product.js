@@ -27,12 +27,12 @@ router.delete('/:id', async(req,res) => {
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_producto_servicio, unidad, descripción} = req.body;
+    const { usuario, nombre_producto_servicio, unidad, descripcion} = req.body;
     const newProduct = {
         usuario,
         nombre_producto_servicio,
         unidad,
-        descripción
+        descripcion
     };
     await pool.query('UPDATE producto_servicio set ? WHERE id_producto_servicio = ?', [newProduct, req.params.id]);
     res.json(`Product with id ${req.params.id} was updated`);
