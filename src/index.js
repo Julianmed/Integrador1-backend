@@ -5,6 +5,7 @@ var cors = require('cors');
 //initializations
 const app = express();
 
+//Settings
 app.set('port', process.env.PORT || 4001);
 // Defining CORS
 app.use(cors({origin: 'http://localhost:3000'}))
