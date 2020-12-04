@@ -9,7 +9,16 @@ router.get('/', async (req,res)=>{
 
 router.get('/:id', async (req,res)=>{
     const producto_servicio = await pool.query('SELECT * FROM producto_servicio WHERE id_producto_servicio = ?', [req.params.id]);
-    res.json(producto_servicio);
+    const product = {
+        id_producto_servicio: producto_servicio[0].producto_servicio,
+        usuario: producto_servicio[0].usuario,
+        nombre_producto_servicio: producto_servicio[0].nombre_producto_servicio,
+        descripcion: producto_servicio[0].descripcion,
+        id_concepto: producto_servicio[0].id_categoria,
+        id_categoria: producto_servicio[0].id_categoria,
+        unidad: producto_servicio[0].unidad
+    };
+    res.json(product);
 });
 
 router.post('/', async (req, res) => {

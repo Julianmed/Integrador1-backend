@@ -9,7 +9,14 @@ router.get('/all/:id_categoria', async (req,res)=>{
 
 router.get('/:id', async (req,res)=>{
     const concepto = await pool.query('SELECT * FROM concepto WHERE id_concepto = ?', [req.params.id]);
-    res.json(concepto);
+    const concept = {
+        usuario:concepto[0].usuario,
+        nombre_concepto: concepto[0].nombre_concepto,
+        descripcion: concepto[0].descripcion,
+        id_concepto: concepto[0].id_categoria,
+        id_categoria: concepto[0].id_categoria
+    }
+    res.json(concept);
 });
 
 router.post('/', async (req, res) => {
@@ -31,6 +38,7 @@ router.put('/:id', async (req,res) => {
     const newConcept = {
         usuario,
         nombre_concepto,
+        id_categoria,
         descripcion
     };
     await pool.query('UPDATE concepto set ? WHERE id_concepto = ?', [newConcept, req.params.id]);

@@ -9,7 +9,14 @@ router.get('/', async (req,res)=>{
 
 router.get('/:id', async (req,res)=>{
     const punto_adquisicion = await pool.query('SELECT * FROM punto_adquisicion WHERE id_punto = ?', [req.params.id]);
-    res.json(punto_adquisicion);
+    const point_acquisition = {
+        id_punto: punto_adquisicion[0].id_punto,
+        usuario: punto_adquisicion[0].usuario,
+        nombre_punto: punto_adquisicion[0].nombre_punto,
+        descripcion: punto_adquisicion[0].descripcion,
+        direccion: punto_adquisicion[0].direccion
+    };
+    res.json(point_acquisition);
 });
 
 router.post('/', async (req, res) => {
