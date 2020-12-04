@@ -14,7 +14,8 @@ router.get('/:id_categoria', async (req, res) => {
     const category = {
         nombre_categoria: categoria[0].nombre_categoria,
         descripcion: categoria[0].descripcion,
-        id_categoria: categoria[0].id_categoria
+        id_categoria: categoria[0].id_categoria,
+        usuario: categoria[0].usuario
     }
     res.json(category);
 });
@@ -30,14 +31,14 @@ router.delete('/:id', async(req,res) => {
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_categoria, descripcion} = req.body;
+    console.log(req.body);
+    const { nombre_categoria, descripcion} = req.body;
     const newCategory = {
-        usuario,
         nombre_categoria,
         descripcion
     };
     await pool.query('UPDATE categoria set ? WHERE id_categoria = ?', [newCategory, req.params.id]);
-    res.json(`Category with id ${req.params.id} was updated with data ${newCategory}`);
+    res.json(`Category with id ${req.params.id} was updated`);
 });
 
 module.exports = router;
