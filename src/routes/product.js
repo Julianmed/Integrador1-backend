@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 
-router.get('/', async (req,res)=>{
-    const productos_servicios = await pool.query('SELECT * FROM producto_servicio');
+router.get('/all/:id_concepto', async (req,res)=>{
+    const productos_servicios = await pool.query('SELECT * FROM WHERE id_concepto= ?',[req.params.id_concepto]);
     res.json(productos_servicios);
 });
 
