@@ -20,6 +20,7 @@ router.get('/:id', async (req,res)=>{
 });
 
 router.post('/', async (req, res) => {
+    console.log("req ",req.body);
     try {
         await pool.query('INSERT INTO concepto set ?', [req.body]);
         res.json('Data inserted');
