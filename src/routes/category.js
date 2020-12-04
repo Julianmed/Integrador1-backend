@@ -11,7 +11,12 @@ router.get('/', async (req,res)=>{
 // Una categoría
 router.get('/:id_categoria', async (req, res) => {
     const categoria = await pool.query('SELECT * FROM categoria WHERE id_categoria = ?', [req.params.id_categoria]);
-    res.json(categoria);
+    const category = {
+        nombre_categoria: categoria[0].nombre_categoria,
+        descripcion: categoria[0].descripcion,
+        id_categoria: categoria[0].id_categoria
+    }
+    res.json(category);
 });
 
 router.post('/', async (req, res) => {
