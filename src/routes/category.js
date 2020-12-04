@@ -9,9 +9,8 @@ router.get('/', async (req,res)=>{
 });
 
 // Una categoría
-router.get('/:nombre', async (req, res) => {
-    const categoria = await pool.query('SELECT * FROM categoria WHERE nombre_categoria = ?', [req.params.nombre]
-    );
+router.get('/:id_categoria', async (req, res) => {
+    const categoria = await pool.query('SELECT * FROM categoria WHERE id_categoria = ?', [req.params.id_categoria]);
     res.json(categoria);
 });
 

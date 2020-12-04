@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 
-router.get('/', async (req,res)=>{
-    const conceptos = await pool.query('SELECT * FROM concepto');
+router.get('/all/:id_categoria', async (req,res)=>{
+    const conceptos = await pool.query('SELECT * FROM concepto WHERE id_categoria = ?', [req.params.id_categoria]);
     res.json(conceptos);
 });
 
