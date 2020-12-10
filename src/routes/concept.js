@@ -13,7 +13,7 @@ router.get('/:id', async (req,res)=>{
         usuario:concepto[0].usuario,
         nombre_concepto: concepto[0].nombre_concepto,
         descripcion: concepto[0].descripcion,
-        id_concepto: concepto[0].id_categoria,
+        id_concepto: concepto[0].id_concepto,
         id_categoria: concepto[0].id_categoria
     }
     res.json(concept);

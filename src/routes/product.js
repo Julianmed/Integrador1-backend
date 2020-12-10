@@ -14,7 +14,7 @@ router.get('/:id', async (req,res)=>{
         usuario: producto_servicio[0].usuario,
         nombre_producto_servicio: producto_servicio[0].nombre_producto_servicio,
         descripcion: producto_servicio[0].descripcion,
-        id_concepto: producto_servicio[0].id_categoria,
+        id_concepto: producto_servicio[0].id_concepto,
         id_categoria: producto_servicio[0].id_categoria,
         unidad: producto_servicio[0].unidad
     };
