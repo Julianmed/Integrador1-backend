@@ -34,9 +34,8 @@ router.delete('/:id', async(req,res) => {
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_punto, direccion, descripcion} = req.body;
+    const { nombre_punto, direccion, descripcion } = req.body;
     const newPoint = {
-        usuario,
         nombre_punto,
         direccion,
         descripcion
