@@ -3,13 +3,13 @@ const router = express.Router();
 const pool = require('../database');
 
 router.get('/all/:id_concepto', async (req,res)=>{
-    const productos_servicios = await pool.query('SELECT * FROM WHERE id_concepto= ?',[req.params.id_concepto]);
+    const productos_servicios = await pool.query('SELECT * FROM producto_servicio WHERE id_concepto= ?',[req.params.id_concepto]);
     res.json(productos_servicios);
 });
 
 router.get('/:id', async (req,res)=>{
     const producto_servicio = await pool.query('SELECT * FROM producto_servicio WHERE id_producto_servicio = ?', [req.params.id]);
-    const product = {
+        const product = {
         id_producto_servicio: producto_servicio[0].producto_servicio,
         usuario: producto_servicio[0].usuario,
         nombre_producto_servicio: producto_servicio[0].nombre_producto_servicio,
@@ -22,6 +22,7 @@ router.get('/:id', async (req,res)=>{
 });
 
 router.post('/', async (req, res) => {
+    console.log(req.body)
     try {
         await pool.query('INSERT INTO producto_servicio set ?', [req.body]);
         res.json('Data inserted');
