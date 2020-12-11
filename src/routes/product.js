@@ -10,7 +10,7 @@ router.get('/all/:id_concepto', async (req,res)=>{
 router.get('/:id', async (req,res)=>{
     const producto_servicio = await pool.query('SELECT * FROM producto_servicio WHERE id_producto_servicio = ?', [req.params.id]);
         const product = {
-        id_producto_servicio: producto_servicio[0].producto_servicio,
+        id_producto_servicio: producto_servicio[0].id_producto_servicio,
         usuario: producto_servicio[0].usuario,
         nombre_producto_servicio: producto_servicio[0].nombre_producto_servicio,
         descripcion: producto_servicio[0].descripcion,
@@ -37,9 +37,9 @@ router.delete('/:id', async(req,res) => {
 });
 
 router.put('/:id', async (req,res) => {
-    const { usuario, nombre_producto_servicio, unidad, descripcion} = req.body;
+    const { nombre_producto_servicio, unidad, descripcion} = req.body;
+    console.log(req.body);
     const newProduct = {
-        usuario,
         nombre_producto_servicio,
         unidad,
         descripcion
