@@ -3,8 +3,8 @@ const router = express.Router();
 const pool = require('../database');
 
 // Todas las categorías.
-router.get('/', async (req,res)=>{
-    const categorias = await pool.query('SELECT * FROM categoria');
+router.get('/all/:userID', async (req,res)=>{
+    const categorias = await pool.query('SELECT * FROM categoria WHERE usuario = ?', [req.params.userID]);
     res.json(categorias);
 });
 

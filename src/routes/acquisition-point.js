@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 
-router.get('/', async (req,res)=>{
-    const puntos_adquisicion = await pool.query('SELECT * FROM punto_adquisicion');
+router.get('/all/:userID', async (req,res)=>{
+    const puntos_adquisicion = await pool.query('SELECT * FROM punto_adquisicion WHERE usuario = ?', [req.params.userID]);
     res.json(puntos_adquisicion);
 });
 
