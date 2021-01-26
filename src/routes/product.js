@@ -7,6 +7,11 @@ router.get('/all/:id_concepto', async (req,res)=>{
     res.json(productos_servicios);
 });
 
+router.get('/allbyuser/:usuario', async (req,res)=>{
+    const productos = await pool.query('SELECT * FROM concepto WHERE usuario', [req.params.usuario]);
+    res.json(productos);
+});
+
 router.get('/:id', async (req,res)=>{
     const producto_servicio = await pool.query('SELECT * FROM producto_servicio WHERE id_producto_servicio = ?', [req.params.id]);
         const product = {

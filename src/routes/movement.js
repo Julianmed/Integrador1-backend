@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 
-router.get('/', async (req,res)=>{
-    const movimientos = await pool.query('SELECT * FROM movimiento');
+router.get('/allbyuser/:UserID', async (req,res)=>{
+    const movimientos = await pool.query('SELECT * FROM movimiento WHERE usuario = ?', [req.params.userID]);
     res.json(movimientos);
 });
 
