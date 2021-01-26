@@ -8,7 +8,8 @@ router.get('/all/:id_categoria', async (req,res)=>{
 });
 
 router.get('/allbyuser/:usuario', async (req,res)=>{
-    const conceptos = await pool.query('SELECT * FROM concepto WHERE usuario', [req.params.usuario]);
+    const conceptos = await pool.query('SELECT * FROM concepto WHERE usuario = ?', [req.params.usuario]);
+    console.log("conceptos: ",conceptos);
     res.json(conceptos);
 });
 
