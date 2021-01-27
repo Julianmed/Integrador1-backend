@@ -71,7 +71,12 @@ CREATE TABLE MOVIMIENTO(
 );
 
 ALTER TABLE MOVIMIENTO ADD PRIMARY KEY (consecutivo);
-ALTER TABLE MOVIMIENTO MODIFY consecutivo INT NOT NULL AUTO_INCREMENT;*/
+ALTER TABLE MOVIMIENTO MODIFY consecutivo INT NOT NULL AUTO_INCREMENT;
+ALTER TABLE MOVIMIENTO ADD FOREIGN KEY (id_punto) REFERENCES punto_adquisicion(id_punto);
+ALTER TABLE MOVIMIENTO ADD FOREIGN KEY (id_producto_servicio) REFERENCES producto_servicio(id_producto_servicio);
+ALTER TABLE MOVIMIENTO ADD FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria);
+ALTER TABLE MOVIMIENTO ADD FOREIGN KEY (id_concepto) REFERENCES concepto(id_concepto);
+*/
 
 /*Si hay grandes cambios a las tablas
 DROP TABLE USUARIO;
