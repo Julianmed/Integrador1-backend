@@ -14,7 +14,6 @@ router.post('/allbydate', async (req,res)=>{
         let elementos =[];
         for(let movimiento of movimientos){
             let consulta = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.id_categoria = ? AND mo.id_concepto = ? AND mo.id_producto_servicio = ? AND mo.id_punto = ?', [movimiento.id_categoria, movimiento.id_concepto, movimiento.id_producto_servicio, movimiento.id_punto])
-            console.log("consulta: ",consulta[0]);
             elementos.push(consulta[0]);
         }
         console.log("resultado: ", elementos);
@@ -34,17 +33,21 @@ router.post('/', async (req, res) => {
         var dt = dateTime.create();
         let movement = req.body;
         movement.fecha = dt.format('Y-m-d');
-        let mov = await pool.query('INSERT INTO movimiento set ?', [movement]);
-        console.log("movimiento guardado: ",mov);
+        await pool.query('INSERT INTO movimiento set ?', [movement]);
+        res.json(true);
 
-        res.json('Data inserted');
     } catch (error) {
         res.json(error.sqlMessage)
     }
 })
 
 router.delete('/:id', async(req,res) => {
-    await pool.query('DELETE FROM movimiento WHERE consecutivo = ?', [req.params.id]);
-    res.json(`movement with consecutive ${req.params.id} was deleted`);
+    try {
+        await pool.query('DELETE FROM movimiento WHERE consecutivo = ?', [req.params.id]);
+        res.json(true);
+    } catch (error) {
+        res.json(error)
+    }
+    
 });
 module.exports = router;

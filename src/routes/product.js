@@ -27,29 +27,36 @@ router.get('/:id', async (req,res)=>{
 });
 
 router.post('/', async (req, res) => {
-    console.log(req.body)
     try {
         await pool.query('INSERT INTO producto_servicio set ?', [req.body]);
-        res.json('Data inserted');
+        res.json(true);
     } catch (error) {
         res.json(error.sqlMessage)
     }
 })
 
 router.delete('/:id', async(req,res) => {
-    await pool.query('DELETE FROM producto_servicio WHERE id_producto_servicio = ?', [req.params.id]);
-    res.json(`Product with id ${req.params.id} was deleted`);
+    try {
+        await pool.query('DELETE FROM producto_servicio WHERE id_producto_servicio = ?', [req.params.id]);
+        res.json(`Product with id ${req.params.id} was deleted`);
+    } catch (error) {
+        res.json(error);
+    }
+    
 });
 
 router.put('/:id', async (req,res) => {
-    const { nombre_producto_servicio, unidad, descripcion} = req.body;
-    console.log(req.body);
-    const newProduct = {
-        nombre_producto_servicio,
-        unidad,
-        descripcion
-    };
-    await pool.query('UPDATE producto_servicio set ? WHERE id_producto_servicio = ?', [newProduct, req.params.id]);
-    res.json(`Product with id ${req.params.id} was updated`);
+    try {
+        const { nombre_producto_servicio, unidad, descripcion} = req.body;
+        const newProduct = {
+            nombre_producto_servicio,
+            unidad,
+            descripcion
+        };
+        await pool.query('UPDATE producto_servicio set ? WHERE id_producto_servicio = ?', [newProduct, req.params.id]);
+        res.json(true);
+    } catch (error) {
+        res.json(error);
+    }
 });
 module.exports = router;

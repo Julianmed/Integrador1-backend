@@ -22,25 +22,33 @@ router.get('/:id', async (req,res)=>{
 router.post('/', async (req, res) => {
     try {
         await pool.query('INSERT INTO punto_adquisicion set ?', [req.body]);
-        res.json('Data inserted');
+        res.json(true);
     } catch (error) {
         res.json(error.sqlMessage)
     }
 })
 
 router.delete('/:id', async(req,res) => {
-    await pool.query('DELETE FROM punto_adquisicion WHERE id_punto = ?', [req.params.id]);
-    res.json(`acquisition_point with id ${req.params.id} was deleted`);
+    try{
+        await pool.query('DELETE FROM punto_adquisicion WHERE id_punto = ?', [req.params.id]);
+        res.json(true);
+    }catch (error){
+        res.json(error);
+    }
 });
 
 router.put('/:id', async (req,res) => {
-    const { nombre_punto, direccion, descripcion } = req.body;
-    const newPoint = {
-        nombre_punto,
-        direccion,
-        descripcion
-    };
-    await pool.query('UPDATE punto_adquisicion set ? WHERE id_punto = ?', [newPoint, req.params.id]);
-    res.json(`acquisition_point with id ${req.params.id} was updated`);
+    try{
+        const { nombre_punto, direccion, descripcion } = req.body;
+        const newPoint = {
+            nombre_punto,
+            direccion,
+            descripcion
+        };
+        await pool.query('UPDATE punto_adquisicion set ? WHERE id_punto = ?', [newPoint, req.params.id]);
+        res.json(true);
+    }catch(error){
+        res.json(error)
+    }
 });
 module.exports = router;
