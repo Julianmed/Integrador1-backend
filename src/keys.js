@@ -9,6 +9,6 @@ module.exports = {
         host: 'ixnzh1cxch6rtdrx.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
         user: 'v5460hqam209vgox',
         password: 'rj49ody6mb0qeat9',
-        database: 'CONTROL_GASTOS'
+        database: 'p7im7ebkxjxkzt41'
     }
 }
