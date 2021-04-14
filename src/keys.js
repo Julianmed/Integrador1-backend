@@ -6,9 +6,9 @@ module.exports = {
     //     database: 'CONTROL_GASTOS'
     // }
     database: {
-        host: 'grp6m5lz95d9exiz.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-        user: 'cdr2fpq47zp67b41',
-        password: 'oroujtvb9sx8hyy9',
-        database: 'pigqdbz7fuxsszg8'
+        host: 'ixnzh1cxch6rtdrx.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+        user: 'v5460hqam209vgox',
+        password: 'rj49ody6mb0qeat9',
+        database: 'p7im7ebkxjxkzt41'
     }
 }
