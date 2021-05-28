@@ -30,10 +30,7 @@ router.get('/:id', async (req,res)=>{
 
 router.post('/', async (req, res) => {
     try {
-        var dt = dateTime.create();
-        let movement = req.body;
-        movement.fecha = dt.format('Y-m-d');
-        await pool.query('INSERT INTO movimiento set ?', [movement]);
+        await pool.query('INSERT INTO movimiento set ?', [req.body]);
         res.json(true);
 
     } catch (error) {
