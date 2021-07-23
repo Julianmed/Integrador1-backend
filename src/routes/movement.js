@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../database');
-var dateTime = require('node-datetime');
 
-router.get('/allbyuser/:UserID', async (req,res)=>{
-    const movimientos = await pool.query('SELECT * FROM movimiento WHERE usuario = ?', [req.params.userID]);
-    res.json(movimientos);
+router.get('/allbyuser/:userID', async (req,res)=>{
+    try {
+        const movimientos = await pool.query('SELECT * FROM movimiento WHERE usuario = ?', [req.params.userID]);
+        res.json(movimientos);
+    } catch (error) {
+        res.json(`Error occurred: ${error}`)
+    }
 });
 
 router.post('/allbydate', async (req,res)=>{
@@ -24,8 +27,12 @@ router.post('/allbydate', async (req,res)=>{
 });
 
 router.get('/:id', async (req,res)=>{
-    const movimiento = await pool.query('SELECT * FROM movimiento WHERE consecutivo = ?', [req.params.id]);
-    res.json(movimiento);
+    try {
+        const movimiento = await pool.query('SELECT * FROM movimiento WHERE consecutivo = ?', [req.params.id]);
+        res.json(movimiento);
+    } catch (error) {
+        res.json(`Error occurred: ${error}`)
+    }
 });
 
 router.post('/', async (req, res) => {
@@ -34,7 +41,7 @@ router.post('/', async (req, res) => {
         res.json(true);
 
     } catch (error) {
-        res.json(error.sqlMessage)
+        res.json(`Error occurred: ${error}`)
     }
 })
 
@@ -43,7 +50,7 @@ router.delete('/:id', async(req,res) => {
         await pool.query('DELETE FROM movimiento WHERE consecutivo = ?', [req.params.id]);
         res.json(true);
     } catch (error) {
-        res.json(error)
+        res.json(`Error occurred: ${error}`)
     }
     
 });

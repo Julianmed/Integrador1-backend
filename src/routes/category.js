@@ -4,20 +4,28 @@ const pool = require('../database');
 
 // Todas las categorías.
 router.get('/all/:userID', async (req,res)=>{
-    const categorias = await pool.query('SELECT * FROM categoria WHERE usuario = ?', [req.params.userID]);
-    res.json(categorias);
+    try {
+        const categorias = await pool.query('SELECT * FROM categoria WHERE usuario = ?', [req.params.userID]);
+        res.json(categorias);
+    } catch (error) {
+        res.json(`Error occurred: ${error}`);
+    }
 });
 
 // Una categoría
 router.get('/:id_categoria', async (req, res) => {
-    const categoria = await pool.query('SELECT * FROM categoria WHERE id_categoria = ?', [req.params.id_categoria]);
-    const category = {
-        nombre_categoria: categoria[0].nombre_categoria,
-        descripcion: categoria[0].descripcion,
-        id_categoria: categoria[0].id_categoria,
-        usuario: categoria[0].usuario
+    try {
+        const categoria = await pool.query('SELECT * FROM categoria WHERE id_categoria = ?', [req.params.id_categoria]);
+        const category = {
+            nombre_categoria: categoria[0].nombre_categoria,
+            descripcion: categoria[0].descripcion,
+            id_categoria: categoria[0].id_categoria,
+            usuario: categoria[0].usuario
+        }
+        res.json(category);
+    } catch (error) {
+        res.json(`Error occurred: ${error}`);
     }
-    res.json(category);
 });
 
 router.post('/', async (req, res) => {
@@ -25,7 +33,7 @@ router.post('/', async (req, res) => {
         await pool.query('INSERT INTO categoria set ?', [req.body]);
         res.json(true);
     }catch (error) {
-        res.json(error);
+        res.json(`Error occurred: ${error}`);
     }
     
 });
@@ -35,7 +43,7 @@ router.delete('/:id', async(req,res) => {
         await pool.query('DELETE FROM categoria WHERE id_categoria = ?', [req.params.id]);
         res.json(true);
     }catch(error){
-        res.json(error);
+        res.json(`Error occurred: ${error}`);
     }
     
 });
@@ -50,7 +58,7 @@ router.put('/:id', async (req,res) => {
         await pool.query('UPDATE categoria set ? WHERE id_categoria = ?', [newCategory, req.params.id]);
         res.json(true);
     }catch(error){
-        res.json(error);
+        res.json(`Error occurred: ${error}`);
     }
 });
 

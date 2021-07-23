@@ -26,6 +26,7 @@ app.use('/concept', require('./routes/concept'));
 app.use('/product', require('./routes/product'));
 app.use('/point', require('./routes/acquisition-point'));
 app.use('/movement', require('./routes/movement'));
+app.use('/report', require('./routes/report'));
 app.use(require('./routes/index'));
 
 //Starting the server
