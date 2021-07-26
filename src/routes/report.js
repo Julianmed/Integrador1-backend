@@ -3,7 +3,7 @@ const router = express.Router();
 const pool = require('../database');
 
 // Cuál categoría, concepto o producto desea conocer sus movimientos.
-router.get('/reportbytype/:userID', async (req,res)=>{
+router.put('/reportbytype/:userID', async (req,res)=>{
     let tipo = req.body.tipo;
     let idTipo = req.body.idTipo;
     let existFecha = req.body.existFecha;
@@ -14,44 +14,46 @@ router.get('/reportbytype/:userID', async (req,res)=>{
     try {
         if(existFecha){
             switch(tipo){
-                case 'categoria':
-                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_categoria = ?', [fechaInicial, fechaFinal, userID, idTipo]);
+                case 'categoría':
+                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_categoria = ? ORDER BY mo.fecha', [fechaInicial, fechaFinal, userID, idTipo]);
                     res.json(categorias);
                     break;
         
                 case 'concepto':
-                    const conceptos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ?', [fechaInicial, fechaFinal, userID, idTipo]);
+                    const conceptos = await pool.query('SELECT mo.fecha as fecha, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? ORDER BY mo.fecha', [fechaInicial, fechaFinal, userID, idTipo]);
                     res.json(conceptos);
                     break;
         
                 case 'producto':
-                    const productos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_producto_servicio = ?', [fechaInicial, fechaFinal, userID, idTipo]);
+                    const productos = await pool.query('SELECT mo.fecha as fecha, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_producto_servicio = ? ORDER BY mo.fecha', [fechaInicial, fechaFinal, userID, idTipo]);
                     res.json(productos);
                     break;
         
                 default:
-                    res.json("Consulta no válida");
+                    res.json("Consulta no válida, 1");
+                    break;
             }
         }
         else{
             switch(tipo){
-                case 'categoria':
-                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_categoria = ?', [userID, idTipo]);
+                case 'categoría':
+                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_categoria = ? ORDER BY mo.fecha', [userID, idTipo]);
                     res.json(categorias);
                     break;
         
                 case 'concepto':
-                    const conceptos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ?', [userID, idTipo]);
+                    const conceptos = await pool.query('SELECT mo.fecha as fecha, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? ORDER BY mo.fecha', [userID, idTipo]);
                     res.json(conceptos);
                     break;
         
                 case 'producto':
-                    const productos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_producto_servicio = ?', [userID, idTipo]);
+                    const productos = await pool.query('SELECT mo.fecha as fecha, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_producto_servicio = ? ORDER BY mo.fecha', [userID, idTipo]);
                     res.json(productos);
                     break;
         
                 default:
-                    res.json("consulta no válida");
+                    res.json("consulta no válida, 2");
+                    break;
             }
         }
     } catch (error) {
@@ -61,8 +63,8 @@ router.get('/reportbytype/:userID', async (req,res)=>{
 
 // Categoría, concepto o producto, adquirido en un punto de compra específico.
 router.get('/reportbypoint/:userID', async (req,res)=>{
-    let tipo = req.body.tipo;
-    let idTipo = req.body.idTipo;
+    let tipoParaPunto = req.body.tipoParaPunto;
+    let idTipoParaPunto = req.body.idTipoParaPunto;
     let idPunto = req.body.idPunto;
     let existFecha = req.body.existFecha;
     let fechaInicial = req.body.fechaInicial;
@@ -71,19 +73,19 @@ router.get('/reportbypoint/:userID', async (req,res)=>{
 
     try {
         if(existFecha){
-            switch(tipo){
-                case 'categoria':
-                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ?', [fechaInicial, fechaFinal,userID, idTipo, idPunto]);
+            switch(tipoParaPunto){
+                case 'categoría':
+                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ? ORDER BY mo.fecha', [fechaInicial, fechaFinal,userID, idTipoParaPunto, idPunto]);
                     res.json(categorias);
                     break;
         
                 case 'concepto':
-                    const conceptos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ?', [fechaInicial, fechaFinal,userID, idTipo, idPunto]);
+                    const conceptos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ? ORDER BY mo.fecha', [fechaInicial, fechaFinal,userID, idTipo, idPunto]);
                     res.json(conceptos);
                     break;
         
                 case 'producto':
-                    const productos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ?', [fechaInicial, fechaFinal,userID, idTipo, idPunto]);
+                    const productos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ? ORDER BY mo.fecha', [fechaInicial, fechaFinal,userID, idTipo, idPunto]);
                     res.json(productos);
                     break;
         
@@ -94,18 +96,18 @@ router.get('/reportbypoint/:userID', async (req,res)=>{
     
         else{
             switch(tipo){
-                case 'categoria':
-                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ?', [userID, idTipo, idPunto]);
+                case 'categoría':
+                    const categorias = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ? ORDER BY mo.fecha', [userID, idTipo, idPunto]);
                     res.json(categorias);
                     break;
         
                 case 'concepto':
-                    const conceptos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ?', [userID, idTipo, idPunto]);
+                    const conceptos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ? ORDER BY mo.fecha', [userID, idTipo, idPunto]);
                     res.json(conceptos);
                     break;
         
                 case 'producto':
-                    const productos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ?', [userID, idTipo, idPunto]);
+                    const productos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.usuario = ? AND mo.id_concepto = ? AND mo.id_punto = ? ORDER BY mo.fecha', [userID, idTipo, idPunto]);
                     res.json(productos);
                     break;
         
@@ -119,30 +121,17 @@ router.get('/reportbypoint/:userID', async (req,res)=>{
 });
 
 // Movimientos por rango de fecha.
-router.get('/reportbydate/:userID', async (req,res)=>{
+router.put('/reportbydate/:userID', async (req,res)=>{
     let start = req.body.start;
     let finish = req.body.finish;
     let userID = req.params.userID;
-    
     try{
-        //const movimientos = await pool.query('SELECT * FROM movimiento WHERE fecha BETWEEN ? AND ? AND usuario = ?', [start, finish, userID]);
-        let elementos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ?', [start, finish, userID]);
-        //let elementos = await joinData(movimientos);
+        let elementos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND mo.usuario = ? ORDER BY mo.fecha', [start, finish, userID]);
+
         res.json(elementos);
     }catch(error){
         res.json(`Error occurred: ${error}`)
     }
 });
-
-async function joinData (movimientos){
-    // for(let movimiento of movimientos){
-    //     let consulta = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.id_categoria = ? AND mo.id_concepto = ? AND mo.id_producto_servicio = ? AND mo.id_punto = ?', [movimiento.id_categoria, movimiento.id_concepto, movimiento.id_producto_servicio, movimiento.id_punto]);
-    //     if(consulta.length > 0){
-    //         elementos.push(consulta[0]);
-    //     }
-    // }
-    let elementos = await pool.query('SELECT mo.fecha as fecha, ca.nombre_categoria as categoria, co.nombre_concepto as concepto, pr.nombre_producto_servicio as producto_servicio, mo.cantidad as cantidad, mo.valor_unitario as valor, mo.tipo_movimiento as movimiento, pa.nombre_punto as punto FROM movimiento AS mo INNER JOIN categoria AS ca ON mo.id_categoria = ca.id_categoria INNER JOIN concepto AS co ON mo.id_concepto = co.id_concepto INNER JOIN producto_servicio AS pr ON mo.id_producto_servicio = pr.id_producto_servicio INNER JOIN punto_adquisicion AS pa ON mo.id_punto = pa.id_punto WHERE mo.fecha BETWEEN ? AND ? AND usuario = ?', [start, finish, userID]);
-    return elementos;
-};
 
 module.exports = router;
